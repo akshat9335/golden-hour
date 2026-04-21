@@ -619,36 +619,24 @@ function App() {
     setBotReply("");
 
     try {
-      const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.REACT_APP_GEMINI_API_KEY}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            contents: [
-              {
-                parts: [
-                  {
-                    text:
-                      "You are an emergency first aid assistant. " +
-                      "Reply in 4 to 5 short bullet points only. " +
-                      "Each point under 8 words. " +
-                      "No paragraphs. No long explanations. " +
-                      "Clear practical steps only. " +
-                      "Question: " +
-                      botInput,
-                  },
-                ],
-              },
-            ],
-          }),
+      const res = await fetch("/api/gemini", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({
+          prompt:
+            "You are an emergency first aid assistant. " +
+            "Reply in 4 to 5 short bullet points only. " +
+            "Each point under 8 words. " +
+            "No paragraphs. No long explanations. " +
+            "Clear practical steps only. " +
+            "Question: " +
+            botInput,
+        }),
+      });
 
       const data = await res.json();
-      console.log("Bot response:", data);
 
       const text =
         data.candidates?.[0]?.content?.parts?.[0]?.text || "No response.";
@@ -663,32 +651,17 @@ function App() {
 
   const analyzeAccidentPhoto = async (imageURL, reportId) => {
     try {
-      const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.REACT_APP_GEMINI_API_KEY}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            contents: [
-              {
-                parts: [
-                  {
-                    text: "Analyze this accident image. Reply only in this format: Severity: High/Medium/Low. Summary: short one line.",
-                  },
-                  {
-                    file_data: {
-                      mime_type: "image/jpeg",
-                      file_uri: imageURL,
-                    },
-                  },
-                ],
-              },
-            ],
-          }),
+      const res = await fetch("/api/gemini", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({
+          prompt:
+            "Analyze this accident image. Reply only in this format: Severity: High/Medium/Low. Summary: short one line.",
+          imageURL: imageURL,
+        }),
+      });
 
       const data = await res.json();
 
@@ -713,6 +686,7 @@ function App() {
   const uploadAccidentPhoto = async () => {
     console.log("🚗 Uploading photo for accident ID:", lastReportId);
     console.log("🚗 Selected photo:", selectedPhoto);
+
     if (!selectedPhoto || !lastReportId) {
       setShowPhotoPrompt(false);
       return;
