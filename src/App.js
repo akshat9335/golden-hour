@@ -571,7 +571,7 @@ function App() {
       });
 
       i++;
-    }, 250);
+    }, 1000);
   };
 
   const handleSOS = async () => {
