@@ -1,4 +1,4 @@
-//AIzaSyD0jp0CCMBBIcDy491VLFNBcF-SN736Rbs
+
 import React, { useState, useEffect, useRef } from "react";
 import {
   GoogleMap,
@@ -606,7 +606,7 @@ function App() {
 
     try {
       const res = await fetch(
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=AIzaSyBm5E7yU9mKVu77YiZ7EApclO-6h7NmqS4",
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.REACT_APP_GEMINI_API_KEY}`,
         {
           method: "POST",
           headers: {
@@ -650,7 +650,7 @@ function App() {
   const analyzeAccidentPhoto = async (imageURL, reportId) => {
     try {
       const res = await fetch(
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=AIzaSyBm5E7yU9mKVu77YiZ7EApclO-6h7NmqS4",
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.REACT_APP_GEMINI_API_KEY}`,
         {
           method: "POST",
           headers: {
@@ -762,7 +762,7 @@ function App() {
 
   return (
     <LoadScript
-      googleMapsApiKey="AIzaSyD0jp0CCMBBIcDy491VLFNBcF-SN736Rbs"
+      googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
       libraries={libraries}
     >
       {/* 🔁 SWITCH BUTTON */}
