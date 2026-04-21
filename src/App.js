@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import {
   GoogleMap,
@@ -548,8 +547,11 @@ function App() {
 
   const animateAmbulance = (path) => {
     let i = 0;
+    let progress = 0;
+    const speed = 0.03; // kam = slow, zyada = fast
+
     animationRef.current = setInterval(() => {
-      if (i >= path.length) {
+      if (i >= path.length - 1) {
         clearInterval(animationRef.current);
 
         setIsArrived(true);
@@ -565,13 +567,25 @@ function App() {
         return;
       }
 
+      const start = path[i];
+      const end = path[i + 1];
+
+      const lat = start.lat() + (end.lat() - start.lat()) * progress;
+
+      const lng = start.lng() + (end.lng() - start.lng()) * progress;
+
       setAmbulancePosition({
-        lat: path[i].lat(),
-        lng: path[i].lng(),
+        lat: lat,
+        lng: lng,
       });
 
-      i++;
-    }, 1000);
+      progress += speed;
+
+      if (progress >= 1) {
+        progress = 0;
+        i++;
+      }
+    }, 50);
   };
 
   const handleSOS = async () => {
