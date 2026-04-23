@@ -3,7 +3,7 @@ import twilio from "twilio";
 export default async function handler(req, res) {
   const client = twilio(
     process.env.TWILIO_SID,
-    process.env.TWILIO_AUTH
+    process.env.TWILIO_AUTH_TOKEN
   );
 
   try {
