@@ -416,6 +416,15 @@ function App() {
         try {
           await fetch("/api/sendSMS", {
             method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              lat: location.lat,
+              lng: location.lng,
+              userName: user.displayName,
+            }),
+
           });
 
           alert("🚨 Emergency alert sent!");
