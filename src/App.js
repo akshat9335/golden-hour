@@ -60,6 +60,10 @@ function App() {
   const [botReply, setBotReply] = useState("");
   const [botLoading, setBotLoading] = useState(false);
 
+  const [emergencyNumber, setEmergencyNumber] = useState("");
+  const [isNumberSaved, setIsNumberSaved] = useState(false);
+  const [smsEnabled, setSmsEnabled] = useState(false);
+
   const [showPhotoPrompt, setShowPhotoPrompt] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [lastReportId, setLastReportId] = useState(null);
@@ -404,6 +408,23 @@ function App() {
     setShowPhotoPrompt(true);
 
     findHospitals(location);
+
+    if (smsEnabled) {
+      if (!isNumberSaved) {
+        console.log("Number not saved, skipping SMS");
+      } else {
+        try {
+          await fetch("/api/sendSMS", {
+            method: "POST",
+          });
+
+          alert("🚨 Emergency alert sent!");
+        } catch (err) {
+          console.error(err);
+          alert("SMS failed!");
+        }
+      }
+    }
   };
 
   // ALERT ROUTE
@@ -856,6 +877,92 @@ function App() {
               >
                 Login with Google
               </button>
+            )}
+          </div>
+
+          <div
+            style={{
+              position: "absolute",
+              top: 250, // 👈 login ke niche (adjust 180–210)
+              left: 16,
+              zIndex: 9999,
+              background: "rgba(255,255,255,0.95)",
+              padding: "10px",
+              borderRadius: "10px",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+              width: "220px",
+              fontSize: "13px",
+            }}
+          >
+            {/* Title */}
+            <div style={{ fontWeight: "600", marginBottom: "6px" }}>
+              📞 Emergency Contact
+            </div>
+
+            {/* Input */}
+            <input
+              type="number"
+              placeholder="91XXXXXXXXXX"
+              value={emergencyNumber}
+              onChange={(e) => {
+                setEmergencyNumber(e.target.value);
+                setIsNumberSaved(false);
+              }}
+              style={{
+                width: "100%",
+                padding: "5px",
+                borderRadius: "6px",
+                border: "1px solid #ccc",
+                marginBottom: "6px",
+                fontSize: "12px",
+              }}
+            />
+
+            {/* Row: Save + Toggle */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              {/* Save */}
+              <button
+                onClick={() => {
+                  if (!emergencyNumber) return alert("Enter number");
+                  setIsNumberSaved(true);
+                }}
+                style={{
+                  padding: "4px 8px",
+                  borderRadius: "6px",
+                  border: "none",
+                  background: "#333",
+                  color: "white",
+                  fontSize: "12px",
+                  cursor: "pointer",
+                }}
+              >
+                Save
+              </button>
+
+              {/* Toggle */}
+              <label style={{ fontSize: "12px" }}>
+                <input
+                  type="checkbox"
+                  checked={smsEnabled}
+                  onChange={() => setSmsEnabled(!smsEnabled)}
+                />{" "}
+                SMS
+              </label>
+            </div>
+
+            {/* Status */}
+            {isNumberSaved && (
+              <div
+                style={{ color: "green", marginTop: "4px", fontSize: "12px" }}
+              >
+                Saved ✅
+              </div>
             )}
           </div>
 
