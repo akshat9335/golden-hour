@@ -424,7 +424,6 @@ function App() {
               lng: location.lng,
               userName: user.displayName,
             }),
-
           });
 
           alert("🚨 Emergency alert sent!");
@@ -638,6 +637,27 @@ function App() {
     setCurrentAccidentId(docRef.id);
     setAlertMsg("🚨 SOS Sent Successfully!");
     setConfirmCount(1);
+
+    if (smsEnabled && isNumberSaved) {
+      try {
+        await fetch("/api/sendSMS", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            lat: userLocation.lat,
+            lng: userLocation.lng,
+            userName: user?.displayName,
+          }),
+        });
+
+        alert("🚨 Emergency alert sent!");
+      } catch (err) {
+        console.error(err);
+        alert("SMS failed!");
+      }
+    }
   };
 
   //chatbot
