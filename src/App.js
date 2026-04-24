@@ -627,6 +627,7 @@ function App() {
       lat: userLocation.lat,
       lng: userLocation.lng,
       userId: user.uid,
+      userName: user.displayName,
       time: new Date(),
       confirmations: 1,
       status: "active",
